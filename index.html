@@ -23,6 +23,8 @@ h1,h2,.brand,.c{font-family:'Bricolage Grotesque',system-ui,sans-serif;letter-sp
 .top .all{color:var(--mu);font-size:15px}
 .ad{display:flex;align-items:center;justify-content:center;min-height:90px;border:1px dashed var(--ln);border-radius:12px;color:#5d6f8a;font-size:13px;overflow:hidden}
 #ad-side{min-height:250px;align-self:start}
+#ad-top,#ad-below{min-height:250px}
+.ad{border:0}
 .adwrap{margin-top:4px;margin-bottom:8px}
 .hero{padding:36px 0 30px}
 .hero h1{font-size:clamp(34px,6vw,60px);line-height:1.05;font-weight:800;max-width:14em}
@@ -47,6 +49,9 @@ body[data-v=tool] #ad-side,body[data-v=home] #ad-below{display:none}
 .drop:hover,.drop.on,.drop:focus-within{border-color:var(--ac);background:var(--s2)}
 .drop strong{font-size:18px}.drop span{color:var(--mu);font-size:14px}
 .vh{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.drop input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2;font-size:0}
+.drop input[type=file]:disabled{cursor:not-allowed}
+.drop .btn,.drop span{pointer-events:none}
 .files li,.res li{display:flex;align-items:center;gap:10px;padding:10px 12px;margin-top:8px;background:var(--s1);border:1px solid var(--ln);border-radius:12px}
 .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .nm small{display:block;color:var(--mu);font-size:13px}.nm .note{color:#7be0c8}
@@ -92,22 +97,33 @@ footer{border-top:1px solid var(--ln);margin-top:24px;padding-top:24px;padding-b
 <header class="top"><a class="brand" href="#">Pak<b>PDF</b>Hub</a><a class="all" href="#">All tools</a></header>
 
 <!-- AD SLOT 1 (top banner, shows on every page): paste Adsterra banner code below -->
-<div class="adwrap" id="adw-top"><div class="ad" id="ad-top">Ad space</div></div>
+<div class="adwrap" id="adw-top"><div class="ad" id="ad-top"></div></div>
 
 <div class="wrap">
 <main id="app"></main>
 <!-- AD SLOT 2 (sidebar, home page only): paste Adsterra code below -->
-<aside class="ad" id="ad-side">Ad space</aside>
+<aside class="ad" id="ad-side"></aside>
 </div>
 
 <!-- AD SLOT 3 (below the tool, tool pages only): paste Adsterra code below -->
-<div class="adwrap" id="adw-below"><div class="ad" id="ad-below">Ad space</div></div>
+<div class="adwrap" id="adw-below"><div class="ad" id="ad-below"></div></div>
 
 <footer><nav class="fl"><a href="about.html">About Us</a><a href="privacy.html">Privacy Policy</a><a href="contact.html">Contact</a></nav><p>Pak PDF Hub. Free PDF and image tools. Everything runs inside your browser and your files are never uploaded.</p></footer>
 
 <div id="ov" hidden role="dialog" aria-modal="true" aria-label="Tool"><div class="ovbar"><button type="button" class="bk" id="bk" aria-label="Back to all tools"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><strong id="ovt"></strong></div><div class="ovin"><div id="ovtop"></div><div id="ovb"></div><div id="ovbelow"></div></div></div>
 
 <script>
+/* Click engine: handles every button in the capture phase, before any ad script can interfere. */
+const H={'#bk':()=>nav(''),'.card':(e,c)=>nav(c.dataset.k),'a[href^="#"]':(e,a)=>{e.preventDefault();nav(a.getAttribute('href').slice(1))}};
+window.addEventListener('click',e=>{
+ const t=e.target;if(!t||!t.closest)return;
+ for(const k in H){const el=t.closest(k);if(el){H[k](e,el);return}}
+},true);
+window.addEventListener('keydown',e=>{
+ const c=e.target.closest&&e.target.closest('.card');
+ if(c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();nav(c.dataset.k)}
+ else if(e.key==='Escape'&&!ov.hidden)nav('');
+},true);
 const CDN='https://cdnjs.cloudflare.com/ajax/libs/';
 const app=document.getElementById('app'),DT=document.title;
 const loaded={};
@@ -242,14 +258,13 @@ function home(){
  app.innerHTML=`<section class="hero"><h1>Your files never leave your phone.</h1><p>Merge, split, compress and convert PDFs and images right in your browser. No upload, no sign-up, no waiting. Made for CNIC copies, fee vouchers, CVs and online forms.</p></section>
  <div class="grid">${Object.entries(T).map(([k,t])=>`<div class="card" role="button" tabindex="0" data-k="${k}"><div class="fmt"><span class="c ${t.c[0]}">${t.a}</span><span class="c arrow">→</span><span class="c ${t.c[1]}">${t.b}</span></div><h2>${t.t}</h2><p>${t.d}</p></div>`).join('')}</div>
  <section class="info"><h2>Questions people ask</h2><dl><dt>Is it really free?</dt><dd>Yes. No sign-up and no daily limit.</dd><dt>Are my files uploaded anywhere?</dt><dd>No. Every tool runs inside your browser, so your CNIC and documents never reach a server.</dd><dt>Does it work on mobile?</dt><dd>Yes. Open it in Chrome on your phone and pick files from your gallery or file manager.</dd></dl></section>`;
- app.querySelectorAll('.card').forEach(c=>{c.onclick=()=>nav(c.dataset.k);c.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();nav(c.dataset.k)}};c.addEventListener('pointerenter',()=>prefetch(T[c.dataset.k]),{once:true})});
+ app.querySelectorAll('.card').forEach(c=>c.addEventListener('pointerenter',()=>prefetch(T[c.dataset.k]),{once:true}));
 }
 
 function tool(k){
  const t=T[k],app=ovb;let files=[],urls=[];prefetch(t);
  app.innerHTML=`<div class="sheet"><p class="lead">${t.d}</p>
- <input class="vh" type="file" id="inp" accept="${t.kind==='pdf'?'application/pdf':'image/*'}" ${t.multi?'multiple':''}>
- <div class="drop" id="drop"><button type="button" class="btn" id="pick">Upload ${t.multi?'files':'file'}</button><button type="button" class="btn alt" id="more" hidden>Add more files</button><span id="hint">or drop ${t.multi?'them':'it'} here. Your files stay on your device.</span></div>
+ <div class="drop" id="drop"><input type="file" id="inp" aria-label="Choose files" accept="${t.kind==='pdf'?'application/pdf':'image/*'}" ${t.multi?'multiple':''}><button type="button" class="btn" id="pick" tabindex="-1">Upload ${t.multi?'files':'file'}</button><button type="button" class="btn alt" id="more" hidden>Add more files</button><span id="hint">or drop ${t.multi?'them':'it'} here. Your files stay on your device.</span></div>
  <ul class="files" id="list"></ul><div class="opts">${(t.opts||[]).map(optHTML).join('')}</div>
  <button class="btn" id="go" disabled>${t.cta}</button>
  <div id="prog" hidden><div class="bar"><i id="bar"></i></div><span id="ptxt"></span></div>
@@ -270,7 +285,7 @@ function tool(k){
   list.innerHTML=files.map((f,i)=>`<li><span class="nm">${esc(f.name)}<small>${fmt(f.size)}</small></span>${t.order&&files.length>1?`<button class="ib" data-i="${i}" data-a="up" aria-label="Move up">▲</button><button class="ib" data-i="${i}" data-a="dn" aria-label="Move down">▼</button>`:''}<button class="ib" data-i="${i}" data-a="rm" aria-label="Remove file">✕</button></li>`).join('');
   go.disabled=files.length<need();
   const has=files.length>0,full=files.length>=MAX;
-  pick.disabled=has;pick.classList.toggle('done',has);
+  inp.disabled=full;pick.disabled=has;pick.classList.toggle('done',has);
   pick.textContent=has?(t.multi?'Files added':'File added'):'Upload '+(t.multi?'files':'file');
   more.hidden=!(t.multi&&has);more.disabled=full;more.classList.toggle('done',full);
   more.textContent=full?'Limit reached ('+MAX+' files)':'Add more files';
@@ -279,31 +294,29 @@ function tool(k){
    files.length<need()?'Add at least '+need()+' files to continue.':files.length+' of '+MAX+' files added.';
  }
  inp.onchange=()=>{add(inp.files);inp.value=''};
- drop.onclick=()=>{if(files.length<MAX)inp.click()};
- ['dragover','dragenter'].forEach(e=>drop.addEventListener(e,x=>{x.preventDefault();drop.classList.add('on')}));
+  ['dragover','dragenter'].forEach(e=>drop.addEventListener(e,x=>{x.preventDefault();drop.classList.add('on')}));
  ['dragleave','drop'].forEach(e=>drop.addEventListener(e,x=>{x.preventDefault();drop.classList.remove('on')}));
  drop.addEventListener('drop',x=>add(x.dataTransfer.files));
- list.onclick=e=>{
-  const b=e.target.closest('button');if(!b)return;
+ H['#list button']=(e,b)=>{
   const i=+b.dataset.i,a=b.dataset.a;
   if(a==='rm')files.splice(i,1);
   else{const j=a==='up'?i-1:i+1;if(j>=0&&j<files.length)[files[i],files[j]]=[files[j],files[i]]}
   draw();
  };
- function show(out){
+ function show(out){loadPop();
   res.innerHTML=out.map(r=>{const u=URL.createObjectURL(r.blob);urls.push(u);
    return `<li><span class="nm">${esc(r.name)}<small>${fmt(r.blob.size)}</small>${r.note?`<small class="note">${esc(r.note)}</small>`:''}</span><a class="btn alt" href="${u}" download="${esc(r.name)}">Download</a></li>`}).join('')
    +(out.length>1?'<li><button class="btn" id="zipb">Download all as ZIP</button></li>':'')+'<li><button class="btn alt" id="again">Start over</button></li>';
-  $('#again').onclick=()=>{files=[];draw();res.innerHTML='';err.textContent=''};
+  H['#again']=()=>{files=[];draw();res.innerHTML='';err.textContent=''};
   const z=$('#zipb');
-  if(z)z.onclick=async()=>{
+  if(z)H['#zipb']=async()=>{
    z.disabled=true;z.textContent='Preparing ZIP...';
    const a=document.createElement('a');a.href=URL.createObjectURL(await zip(out));a.download='pak-pdf-hub.zip';a.click();
    z.disabled=false;z.textContent='Download all as ZIP';
   };
   res.scrollIntoView({behavior:'smooth',block:'nearest'});
  }
- go.onclick=async()=>{
+ H['#go']=async()=>{
   go.disabled=true;err.textContent='';res.innerHTML='';urls.forEach(u=>URL.revokeObjectURL(u));urls=[];
   $('#prog').hidden=false;$('#bar').style.width='0';
   const o={};(t.opts||[]).forEach(x=>o[x.id]=$('#o_'+x.id).value);
@@ -330,14 +343,26 @@ function route(k){
  T[k]?openTool(k):closeTool();
 }
 function nav(k){try{history.pushState(null,'','#'+k)}catch(_){}route(k)}
-document.getElementById('bk').onclick=()=>nav('');
-document.addEventListener('click',e=>{
- const a=e.target.closest&&e.target.closest('a[href^="#"]');if(!a)return;
- e.preventDefault();nav(a.getAttribute('href').slice(1));
-});
 addEventListener('popstate',()=>route());
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!ov.hidden)nav('')});
 home();route();
+
+/* Ads: loaded AFTER the site is ready, so they can never block or break the tools. */
+const AD={banner:'https://bauval.org/22/a65341b4ef6a852926dee7e41aaea392',pop:'https://abscloud.org/1/c5a4265aaa634f0df4fb1b9bc7b4f8b5',bar:'https://bauval.org/14/4f72e976b9bb623dc62d5967592fe3eb'};
+const adScript=(src,box)=>new Promise(done=>{
+ const s=document.createElement('script');s.src=src;s.async=true;s.setAttribute('data-cfasync','false');
+ s.onload=s.onerror=done;setTimeout(done,4000);(box||document.body).appendChild(s);
+});
+async function loadAds(){
+ for(const id of ['ad-top','ad-side','ad-below']){
+  window.atOptions={key:'a65341b4ef6a852926dee7e41aaea392',format:'iframe',height:250,width:300,params:{}};
+  await adScript(AD.banner,document.getElementById(id));
+ }
+ adScript(AD.bar);
+}
+let popDone=0;
+/* Popunder starts only after a result is ready, so it can never get in the way of choosing files. */
+function loadPop(){if(popDone)return;popDone=1;adScript(AD.pop)}
+addEventListener('load',()=>setTimeout(loadAds,1200));
 </script>
 </body>
 </html>
