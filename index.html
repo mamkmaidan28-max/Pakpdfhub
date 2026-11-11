@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pak PDF Hub – Free PDF and Image Tools</title>
+<meta name="description" content="Free PDF tools for Pakistan: JPG to PDF, merge PDF, split PDF, compress PDF, PDF to JPG and image compressor. Works in your browser. Files are never uploaded.">
+<meta name="theme-color" content="#0c1420">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23f0645a%22/><text x=%2216%22 y=%2222%22 font-size=%2216%22 font-weight=%22700%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22>P</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0c1420;--s1:#131e2e;--s2:#1b2a42;--ln:#263650;--tx:#e9eff8;--mu:#93a4bc;--ac:#2ec4a6;--er:#ff8a80}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font:400 16px/1.6 Figtree,system-ui,sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}ul{list-style:none}
+[hidden]{display:none!important}
+h1,h2,.brand,.c{font-family:'Bricolage Grotesque',system-ui,sans-serif;letter-spacing:-.02em}
+.top,.wrap,.adwrap,footer{max-width:1120px;margin:0 auto;padding-left:20px;padding-right:20px}
+.top{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{font-weight:800;font-size:22px;display:flex;align-items:center;gap:6px}
+.brand b{background:#f0645a;color:#fff;border-radius:6px;padding:0 7px;font-size:17px;line-height:26px}
+.top .all{color:var(--mu);font-size:15px}
+.ad{display:flex;align-items:center;justify-content:center;min-height:90px;border:1px dashed var(--ln);border-radius:12px;color:#5d6f8a;font-size:13px;overflow:hidden}
+#ad-side{min-height:250px;align-self:start}
+.adwrap{margin-top:4px;margin-bottom:8px}
+.hero{padding:36px 0 30px}
+.hero h1{font-size:clamp(34px,6vw,60px);line-height:1.05;font-weight:800;max-width:14em}
+.hero p{color:var(--mu);font-size:18px;max-width:34em;margin-top:16px}
+.wrap{display:grid;gap:28px;grid-template-columns:minmax(0,1fr);padding-bottom:40px}
+@media(min-width:1000px){.wrap{grid-template-columns:minmax(0,1fr) 300px}}
+body[data-v=tool] #ad-side,body[data-v=home] #ad-below{display:none}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.card{display:block;cursor:pointer;background:var(--s1);border:1px solid var(--ln);border-radius:16px;padding:18px;transition:border-color .12s,transform .12s,background .12s}
+.card:hover,.card:focus-visible{border-color:var(--ac);background:var(--s2);transform:translateY(-2px)}
+.card h2{font-size:21px;font-weight:800}.card p{color:var(--mu);font-size:15px;margin-top:4px}
+.fmt{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.c{font-weight:800;font-size:15px;padding:4px 10px;border-radius:8px}
+.c.pdf{background:#3b1d27;color:#ff9d95}.c.jpg{background:#3a301b;color:#f6cb7b}.c.arrow{color:var(--mu);padding:0}
+.info{margin-top:40px}.info h2{font-size:24px;margin-bottom:12px}
+.info dt{font-weight:600;margin-top:14px}.info dd{color:var(--mu)}
+#app.tool{max-width:760px;width:100%;margin:0 auto}
+.back{color:var(--mu);font-size:15px;display:inline-block;margin:22px 0 10px}
+.tool h1{font-size:clamp(28px,5vw,40px);font-weight:800}
+.lead{color:var(--mu);margin:6px 0 22px}
+.drop{display:flex;flex-direction:column;align-items:center;gap:4px;padding:38px 16px;border:2px dashed var(--ln);border-radius:16px;background:var(--s1);cursor:pointer;text-align:center;transition:border-color .12s,background .12s;position:relative}
+.drop:hover,.drop.on,.drop:focus-within{border-color:var(--ac);background:var(--s2)}
+.drop strong{font-size:18px}.drop span{color:var(--mu);font-size:14px}
+.vh{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.files li,.res li{display:flex;align-items:center;gap:10px;padding:10px 12px;margin-top:8px;background:var(--s1);border:1px solid var(--ln);border-radius:12px}
+.nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nm small{display:block;color:var(--mu);font-size:13px}.nm .note{color:#7be0c8}
+.ib{background:none;border:0;color:var(--mu);width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:15px}
+.ib:hover{background:var(--s2);color:var(--tx)}
+.opts{display:grid;gap:14px;margin:18px 0}
+.opts label{display:grid;gap:6px;color:var(--mu);font-size:14px}
+select,input[type=text]{background:var(--s1);color:var(--tx);border:1px solid var(--ln);border-radius:10px;padding:11px 12px;font:inherit}
+input[type=range]{accent-color:var(--ac)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 24px;border:0;border-radius:12px;background:var(--ac);color:#04231d;font:700 16px Figtree,sans-serif;cursor:pointer}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.alt{background:var(--s2);color:var(--tx);border:1px solid var(--ln);min-height:40px;padding:0 16px;font-size:15px}
+.btn.alt:hover{border-color:var(--ac)}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+#prog{margin:16px 0;color:var(--mu);font-size:14px}
+.bar{height:8px;background:var(--s2);border-radius:8px;overflow:hidden;margin-bottom:6px}
+.bar i{display:block;height:100%;width:0;background:var(--ac);transition:width .15s}
+.err{color:var(--er);margin-top:12px}
+footer{border-top:1px solid var(--ln);margin-top:24px;padding-top:24px;padding-bottom:40px;color:var(--mu);font-size:14px}
+.sheet{background:#101a2a;border:1px solid var(--ln);border-radius:20px;padding:18px;margin-top:8px}
+.bar2{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
+.bar2 h1{font-size:clamp(24px,5vw,34px);line-height:1.1}
+.bar2 .lead{margin:4px 0 0;font-size:15px}
+.bk{flex:none;width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:var(--s2);border:1px solid var(--ln);color:var(--tx);transition:border-color .12s,background .12s}
+.bk:hover{border-color:var(--ac);background:var(--s1)}
+.drop .btn{margin-bottom:6px}
+.drop .btn.alt{border-color:var(--ac);color:var(--ac)}
+.drop .btn.done,.drop .btn.done:disabled{background:#3b2a20;color:#bfa28a;border:1px solid #5a3f2e;opacity:1;cursor:not-allowed}
+#ov{position:fixed;inset:0;z-index:50;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;animation:up .18s ease-out}
+#ov[hidden]{display:none}
+@keyframes up{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+.ovbar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:12px;height:64px;padding:0 16px;background:rgba(12,20,32,.94);border-bottom:1px solid var(--ln)}
+.ovbar strong{font:800 20px 'Bricolage Grotesque',system-ui,sans-serif;letter-spacing:-.02em}
+.ovin{max-width:760px;margin:0 auto;padding:12px 20px 40px}
+.ovin .adwrap{padding:0;max-width:none;margin:8px 0 14px}
+.bk{cursor:pointer;width:44px;height:44px;font:inherit}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body data-v="home">
+<header class="top"><a class="brand" href="#">Pak<b>PDF</b>Hub</a><a class="all" href="#">All tools</a></header>
+
+<!-- AD SLOT 1 (top banner, shows on every page): paste Adsterra banner code below -->
+<div class="adwrap" id="adw-top"><div class="ad" id="ad-top">Ad space</div></div>
+
+<div class="wrap">
+<main id="app"></main>
+<!-- AD SLOT 2 (sidebar, home page only): paste Adsterra code below -->
+<aside class="ad" id="ad-side">Ad space</aside>
+</div>
+
+<!-- AD SLOT 3 (below the tool, tool pages only): paste Adsterra code below -->
+<div class="adwrap" id="adw-below"><div class="ad" id="ad-below">Ad space</div></div>
+
+<footer>Pak PDF Hub. Free PDF and image tools. Everything runs inside your browser and your files are never uploaded.</footer>
+
+<div id="ov" hidden role="dialog" aria-modal="true" aria-label="Tool"><div class="ovbar"><button type="button" class="bk" id="bk" aria-label="Back to all tools"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><strong id="ovt"></strong></div><div class="ovin"><div id="ovtop"></div><div id="ovb"></div><div id="ovbelow"></div></div></div>
+
+<script>
+const CDN='https://cdnjs.cloudflare.com/ajax/libs/';
+const app=document.getElementById('app'),DT=document.title;
+const loaded={};
+const load=s=>loaded[s]||(loaded[s]=new Promise((ok,no)=>{const e=document.createElement('script');e.src=s;e.onload=ok;e.onerror=()=>no(new Error('Could not load a required library. Check your internet and try again.'));document.head.appendChild(e)}));
+const memo=f=>{let p;return()=>p||(p=f())};
+const libs={
+ pdflib:memo(()=>load(CDN+'pdf-lib/1.17.1/pdf-lib.min.js')),
+ zip:memo(()=>load(CDN+'jszip/3.10.1/jszip.min.js')),
+ pdfjs:memo(async()=>{
+  await load(CDN+'pdf.js/3.11.174/pdf.min.js');
+  const r=await fetch(CDN+'pdf.js/3.11.174/pdf.worker.min.js');
+  pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([await r.text()],{type:'text/javascript'}));
+ })
+};
+const prefetch=t=>(t.pre||[]).forEach(n=>libs[n]().catch(()=>{}));
+const fmt=n=>n<1024?n+' B':n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(2)+' MB';
+const base=n=>n.replace(/\.[^.]+$/,'');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const buf=f=>f.arrayBuffer();
+const blobOf=(c,type,q)=>new Promise(r=>c.toBlob(r,type,q));
+const pdfBlob=b=>new Blob([b],{type:'application/pdf'});
+
+async function img2canvas(file,maxW){
+ const bm=await createImageBitmap(file,{imageOrientation:'from-image'});
+ let w=bm.width,h=bm.height;
+ if(maxW&&w>maxW){h=Math.round(h*maxW/w);w=maxW}
+ const c=document.createElement('canvas');c.width=w;c.height=h;
+ const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,w,h);x.drawImage(bm,0,0,w,h);bm.close&&bm.close();
+ return c;
+}
+async function pdfPages(file,scale,cb){
+ await libs.pdfjs();
+ const doc=await pdfjsLib.getDocument({data:await buf(file)}).promise;
+ for(let i=1;i<=doc.numPages;i++){
+  const pg=await doc.getPage(i),vp=pg.getViewport({scale}),base1=pg.getViewport({scale:1});
+  const c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;
+  const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);
+  await pg.render({canvasContext:x,viewport:vp}).promise;
+  await cb(c,i,doc.numPages,base1);pg.cleanup();
+ }
+ doc.destroy();
+}
+function ranges(txt,n){
+ if(!txt.trim())return Array.from({length:n},(_,i)=>[i]);
+ return txt.split(',').map(p=>{
+  const m=p.trim().match(/^(\d+)(?:\s*-\s*(\d+))?$/);
+  if(!m)throw new Error('Wrong range "'+p.trim()+'". Write it like 1-3, 5');
+  const a=+m[1],b=+(m[2]||m[1]);
+  if(a<1||b>n||a>b)throw new Error('Page numbers must be between 1 and '+n);
+  return Array.from({length:b-a+1},(_,i)=>a-1+i);
+ });
+}
+const zip=async out=>{await libs.zip();const z=new JSZip();out.forEach(r=>z.file(r.name,r.blob));return z.generateAsync({type:'blob',compression:'STORE'})};
+
+const T={
+'jpg-to-pdf':{t:'JPG to PDF',d:'Turn photos and scans into one PDF. Good for CNIC copies and fee vouchers.',a:'JPG',b:'PDF',c:['jpg','pdf'],kind:'img',multi:1,order:1,cta:'Create PDF',pre:['pdflib'],
+ opts:[{id:'size',l:'Page size',o:[['fit','Same as the image'],['a4','A4 page']]}],
+ async run(files,o,p){
+  await libs.pdflib();const d=await PDFLib.PDFDocument.create();
+  for(const [i,f] of files.entries()){
+   p(i/files.length,'Adding image '+(i+1)+' of '+files.length);
+   const c=await img2canvas(f,2480),im=await d.embedJpg(await buf(await blobOf(c,'image/jpeg',.92)));
+   if(o.size==='a4'){
+    let W=595,H=842;if(c.width>c.height)[W,H]=[H,W];
+    const s=Math.min((W-48)/c.width,(H-48)/c.height),w=c.width*s,h=c.height*s;
+    d.addPage([W,H]).drawImage(im,{x:(W-w)/2,y:(H-h)/2,width:w,height:h});
+   }else{const W=c.width*.75,H=c.height*.75;d.addPage([W,H]).drawImage(im,{x:0,y:0,width:W,height:H})}
+  }
+  return [{name:'images.pdf',blob:pdfBlob(await d.save())}];
+ }},
+'merge-pdf':{t:'Merge PDF',d:'Join several PDFs into one file. Move them up or down to set the order.',a:'PDF ×3',b:'PDF',c:['pdf','pdf'],kind:'pdf',multi:1,order:1,min:2,cta:'Merge PDFs',pre:['pdflib'],
+ async run(files,o,p){
+  await libs.pdflib();const {PDFDocument}=PDFLib,d=await PDFDocument.create();
+  for(const [i,f] of files.entries()){
+   p(i/files.length,'Merging '+f.name);
+   const s=await PDFDocument.load(await buf(f),{ignoreEncryption:true});
+   (await d.copyPages(s,s.getPageIndices())).forEach(pg=>d.addPage(pg));
+  }
+  return [{name:'merged.pdf',blob:pdfBlob(await d.save())}];
+ }},
+'split-pdf':{t:'Split PDF',d:'Cut a PDF into parts, or save every page as its own file.',a:'PDF',b:'PDF ×N',c:['pdf','pdf'],kind:'pdf',cta:'Split PDF',pre:['pdflib','zip'],
+ opts:[{id:'pages',l:'Pages to extract. Leave empty to split every page.',type:'text',ph:'Example: 1-3, 5, 8-10'}],
+ async run(files,o,p){
+  await libs.pdflib();const {PDFDocument}=PDFLib,s=await PDFDocument.load(await buf(files[0]),{ignoreEncryption:true});
+  const rs=ranges(o.pages,s.getPageCount()),out=[];
+  for(const [i,r] of rs.entries()){
+   p(i/rs.length,'Creating part '+(i+1)+' of '+rs.length);
+   const d=await PDFDocument.create();(await d.copyPages(s,r)).forEach(pg=>d.addPage(pg));
+   const tag=r.length>1?'pages-'+(r[0]+1)+'-'+(r[r.length-1]+1):'page-'+(r[0]+1);
+   out.push({name:base(files[0].name)+'-'+tag+'.pdf',blob:pdfBlob(await d.save())});
+  }
+  return out;
+ }},
+'compress-pdf':{t:'Compress PDF',d:'Make scanned or photo PDFs much smaller. Pages are saved as images, so text can no longer be selected.',a:'8 MB',b:'1 MB',c:['pdf','pdf'],kind:'pdf',cta:'Compress PDF',pre:['pdflib','pdfjs'],
+ opts:[{id:'lv',l:'Compression level',o:[['1.3,.6','Balanced (recommended)'],['1.6,.75','Light, best quality'],['1,.4','Maximum, smallest file']]}],
+ async run(files,o,p){
+  await libs.pdflib();const d=await PDFLib.PDFDocument.create(),[sc,ql]=o.lv.split(',').map(Number);
+  await pdfPages(files[0],sc,async(c,i,n,v)=>{
+   p((i-1)/n,'Page '+i+' of '+n);
+   const im=await d.embedJpg(await buf(await blobOf(c,'image/jpeg',ql)));
+   d.addPage([v.width,v.height]).drawImage(im,{x:0,y:0,width:v.width,height:v.height});
+  });
+  const b=pdfBlob(await d.save()),o1=files[0].size;
+  return [{name:base(files[0].name)+'-compressed.pdf',blob:b,note:b.size<o1?fmt(o1)+' to '+fmt(b.size)+', '+Math.round(100-b.size/o1*100)+'% smaller':'This PDF is already small. Try the Maximum level.'}];
+ }},
+'pdf-to-jpg':{t:'PDF to JPG',d:'Save every page of a PDF as a clear JPG image.',a:'PDF',b:'JPG',c:['pdf','jpg'],kind:'pdf',cta:'Convert to JPG',pre:['pdfjs','zip'],
+ opts:[{id:'q',l:'Image quality',o:[['1.5','Standard (fast)'],['2.5','High (bigger files)']]}],
+ async run(files,o,p){
+  const out=[];
+  await pdfPages(files[0],+o.q,async(c,i,n)=>{
+   p((i-1)/n,'Page '+i+' of '+n);
+   out.push({name:base(files[0].name)+'-page-'+i+'.jpg',blob:await blobOf(c,'image/jpeg',.9)});
+  });
+  return out;
+ }},
+'image-compressor':{t:'Image Compressor',d:'Reduce photo size for forms, WhatsApp and websites. Looks the same, weighs far less.',a:'4 MB',b:'400 KB',c:['jpg','jpg'],kind:'img',multi:1,cta:'Compress images',pre:['zip'],
+ opts:[{id:'q',l:'Quality (lower = smaller file)',type:'range',min:20,max:95,v:70},{id:'w',l:'Largest width',o:[['0','Keep original size'],['1920','1920 px'],['1280','1280 px'],['800','800 px']]}],
+ async run(files,o,p){
+  const out=[];
+  for(const [i,f] of files.entries()){
+   p(i/files.length,'Compressing '+f.name);
+   const b=await blobOf(await img2canvas(f,+o.w),'image/jpeg',+o.q/100);
+   out.push(b.size<f.size?{name:base(f.name)+'-compressed.jpg',blob:b,note:fmt(f.size)+' to '+fmt(b.size)+', '+Math.round(100-b.size/f.size*100)+'% smaller'}:{name:f.name,blob:f,note:'Already small. Original kept.'});
+  }
+  return out;
+ }}
+};
+
+const optHTML=x=>'<label>'+esc(x.l)+(x.type==='range'?' <output>'+x.v+'</output><input type="range" id="o_'+x.id+'" min="'+x.min+'" max="'+x.max+'" value="'+x.v+'">':x.type==='text'?'<input type="text" id="o_'+x.id+'" placeholder="'+x.ph+'">':'<select id="o_'+x.id+'">'+x.o.map(([v,l])=>'<option value="'+v+'">'+l+'</option>').join('')+'</select>')+'</label>';
+
+function home(){
+ app.innerHTML=`<section class="hero"><h1>Your files never leave your phone.</h1><p>Merge, split, compress and convert PDFs and images right in your browser. No upload, no sign-up, no waiting. Made for CNIC copies, fee vouchers, CVs and online forms.</p></section>
+ <div class="grid">${Object.entries(T).map(([k,t])=>`<div class="card" role="button" tabindex="0" data-k="${k}"><div class="fmt"><span class="c ${t.c[0]}">${t.a}</span><span class="c arrow">→</span><span class="c ${t.c[1]}">${t.b}</span></div><h2>${t.t}</h2><p>${t.d}</p></div>`).join('')}</div>
+ <section class="info"><h2>Questions people ask</h2><dl><dt>Is it really free?</dt><dd>Yes. No sign-up and no daily limit.</dd><dt>Are my files uploaded anywhere?</dt><dd>No. Every tool runs inside your browser, so your CNIC and documents never reach a server.</dd><dt>Does it work on mobile?</dt><dd>Yes. Open it in Chrome on your phone and pick files from your gallery or file manager.</dd></dl></section>`;
+ app.querySelectorAll('.card').forEach(c=>{c.onclick=()=>nav(c.dataset.k);c.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();nav(c.dataset.k)}};c.addEventListener('pointerenter',()=>prefetch(T[c.dataset.k]),{once:true})});
+}
+
+function tool(k){
+ const t=T[k],app=ovb;let files=[],urls=[];prefetch(t);
+ app.innerHTML=`<div class="sheet"><p class="lead">${t.d}</p>
+ <input class="vh" type="file" id="inp" accept="${t.kind==='pdf'?'application/pdf':'image/*'}" ${t.multi?'multiple':''}>
+ <div class="drop" id="drop"><button type="button" class="btn" id="pick">Upload ${t.multi?'files':'file'}</button><button type="button" class="btn alt" id="more" hidden>Add more files</button><span id="hint">or drop ${t.multi?'them':'it'} here. Your files stay on your device.</span></div>
+ <ul class="files" id="list"></ul><div class="opts">${(t.opts||[]).map(optHTML).join('')}</div>
+ <button class="btn" id="go" disabled>${t.cta}</button>
+ <div id="prog" hidden><div class="bar"><i id="bar"></i></div><span id="ptxt"></span></div>
+ <p class="err" id="err" role="alert"></p><ul class="res" id="res"></ul></div>`;
+ const $=s=>app.querySelector(s),pick=$('#pick'),more=$('#more'),hint=$('#hint'),inp=$('#inp'),drop=$('#drop'),list=$('#list'),go=$('#go'),err=$('#err'),res=$('#res');
+ app.querySelectorAll('input[type=range]').forEach(r=>r.oninput=()=>r.previousElementSibling.textContent=r.value);
+ const ok=f=>t.kind==='pdf'?(f.type==='application/pdf'||/\.pdf$/i.test(f.name)):f.type.startsWith('image/');
+ const need=()=>t.min||1,MAX=t.multi?20:1;
+ function add(fl){
+  const g=[...fl].filter(ok);
+  if(!g.length){err.textContent='Please choose '+(t.kind==='pdf'?'a PDF':'an image')+' file.';return}
+  err.textContent='';
+  if(!t.multi){if(files.length){err.textContent='Remove the current file first to choose another.';return}files=[g[0]]}
+  else{const room=MAX-files.length;if(g.length>room)err.textContent='Limit is '+MAX+' files. Extra files were skipped.';files=files.concat(g.slice(0,room))}
+  draw();
+ }
+ function draw(){
+  list.innerHTML=files.map((f,i)=>`<li><span class="nm">${esc(f.name)}<small>${fmt(f.size)}</small></span>${t.order&&files.length>1?`<button class="ib" data-i="${i}" data-a="up" aria-label="Move up">▲</button><button class="ib" data-i="${i}" data-a="dn" aria-label="Move down">▼</button>`:''}<button class="ib" data-i="${i}" data-a="rm" aria-label="Remove file">✕</button></li>`).join('');
+  go.disabled=files.length<need();
+  const has=files.length>0,full=files.length>=MAX;
+  pick.disabled=has;pick.classList.toggle('done',has);
+  pick.textContent=has?(t.multi?'Files added':'File added'):'Upload '+(t.multi?'files':'file');
+  more.hidden=!(t.multi&&has);more.disabled=full;more.classList.toggle('done',full);
+  more.textContent=full?'Limit reached ('+MAX+' files)':'Add more files';
+  hint.textContent=!has?'or drop '+(t.multi?'them':'it')+' here. Your files stay on your device.':
+   !t.multi?'Remove the file with ✕ to choose another.':
+   files.length<need()?'Add at least '+need()+' files to continue.':files.length+' of '+MAX+' files added.';
+ }
+ inp.onchange=()=>{add(inp.files);inp.value=''};
+ drop.onclick=()=>{if(files.length<MAX)inp.click()};
+ ['dragover','dragenter'].forEach(e=>drop.addEventListener(e,x=>{x.preventDefault();drop.classList.add('on')}));
+ ['dragleave','drop'].forEach(e=>drop.addEventListener(e,x=>{x.preventDefault();drop.classList.remove('on')}));
+ drop.addEventListener('drop',x=>add(x.dataTransfer.files));
+ list.onclick=e=>{
+  const b=e.target.closest('button');if(!b)return;
+  const i=+b.dataset.i,a=b.dataset.a;
+  if(a==='rm')files.splice(i,1);
+  else{const j=a==='up'?i-1:i+1;if(j>=0&&j<files.length)[files[i],files[j]]=[files[j],files[i]]}
+  draw();
+ };
+ function show(out){
+  res.innerHTML=out.map(r=>{const u=URL.createObjectURL(r.blob);urls.push(u);
+   return `<li><span class="nm">${esc(r.name)}<small>${fmt(r.blob.size)}</small>${r.note?`<small class="note">${esc(r.note)}</small>`:''}</span><a class="btn alt" href="${u}" download="${esc(r.name)}">Download</a></li>`}).join('')
+   +(out.length>1?'<li><button class="btn" id="zipb">Download all as ZIP</button></li>':'')+'<li><button class="btn alt" id="again">Start over</button></li>';
+  $('#again').onclick=()=>{files=[];draw();res.innerHTML='';err.textContent=''};
+  const z=$('#zipb');
+  if(z)z.onclick=async()=>{
+   z.disabled=true;z.textContent='Preparing ZIP...';
+   const a=document.createElement('a');a.href=URL.createObjectURL(await zip(out));a.download='pak-pdf-hub.zip';a.click();
+   z.disabled=false;z.textContent='Download all as ZIP';
+  };
+  res.scrollIntoView({behavior:'smooth',block:'nearest'});
+ }
+ go.onclick=async()=>{
+  go.disabled=true;err.textContent='';res.innerHTML='';urls.forEach(u=>URL.revokeObjectURL(u));urls=[];
+  $('#prog').hidden=false;$('#bar').style.width='0';
+  const o={};(t.opts||[]).forEach(x=>o[x.id]=$('#o_'+x.id).value);
+  try{show(await t.run(files,o,(v,m)=>{$('#bar').style.width=Math.round(v*100)+'%';$('#ptxt').textContent=m}))}
+  catch(e){err.textContent=e.message||'This file could not be processed. It may be damaged or password protected.'}
+  $('#prog').hidden=true;go.disabled=files.length<need();
+ };
+}
+
+const ov=document.getElementById('ov'),ovb=document.getElementById('ovb'),adTop=document.getElementById('adw-top'),adBelow=document.getElementById('adw-below');
+const topPar=adTop.parentNode,topNext=adTop.nextSibling,belPar=adBelow.parentNode,belNext=adBelow.nextSibling;
+function openTool(k){
+ const t=T[k];document.getElementById('ovt').textContent=t.t;
+ document.getElementById('ovtop').appendChild(adTop);document.getElementById('ovbelow').appendChild(adBelow);
+ ov.hidden=false;ov.scrollTop=0;document.body.style.overflow='hidden';document.body.dataset.v='tool';
+ document.title=t.t+' Online Free | Pak PDF Hub';tool(k);
+}
+function closeTool(){
+ ov.hidden=true;topPar.insertBefore(adTop,topNext);belPar.insertBefore(adBelow,belNext);
+ document.body.style.overflow='';document.body.dataset.v='home';document.title=DT;ovb.innerHTML='';
+}
+function route(k){
+ if(typeof k!=='string')k=location.hash.slice(1);
+ T[k]?openTool(k):closeTool();
+}
+function nav(k){try{history.pushState(null,'','#'+k)}catch(_){}route(k)}
+document.getElementById('bk').onclick=()=>nav('');
+document.addEventListener('click',e=>{
+ const a=e.target.closest&&e.target.closest('a[href^="#"]');if(!a)return;
+ e.preventDefault();nav(a.getAttribute('href').slice(1));
+});
+addEventListener('popstate',()=>route());
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!ov.hidden)nav('')});
+home();route();
+</script>
+</body>
+</html>
